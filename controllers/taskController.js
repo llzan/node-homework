@@ -16,7 +16,7 @@ const taskCounter = (() => {
 
 const create = async ( req, res) => {
     if (!req.body) req.body = {};
-    const { error, value } = taskSchema.validate(req.body);
+    const { error, value } = taskSchema.validate(req.body, { abortEarly: false });
     if (error) {
         return res.status(400).json({ message: error.details[0].message });
     }
@@ -77,7 +77,7 @@ const update = (req, res) => {
 
     const taskId = parseInt(req.params?.id);
     if (isNaN(taskId)) {
-        return res.status(404).json({ message: "Invalid task ID" });
+        return res.status(400).json({ message: "Invalid task ID" });
     }
     const task = global.tasks.find(
         task => task.id === taskId && task.userId === global.user_id.email
