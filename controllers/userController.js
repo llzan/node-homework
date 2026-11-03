@@ -18,6 +18,9 @@ async function comparePassword(inputPassword, storedHash) {
     const [salt, key] = storedHash.split(":");
     const keyBuffer = Buffer.from(key, "hex");
     const derivedKey = await scrypt(inputPassword, salt, 64);
+    if (derivedKey.length !== keyBuffer.length) {
+        return false;
+    }
     return crypto.timingSafeEqual(derivedKey, keyBuffer);  
 }
 
